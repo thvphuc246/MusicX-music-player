@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.ColorInt;
@@ -483,13 +484,19 @@ public class AudioWidget {
     }
 
     private void show(View view, int left, int top) {
+        int LAYOUT_FLAG;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+        }
         if (view.getParent() != null || view.getWindowToken() != null) {
             windowManager.removeView(view);
         }
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
